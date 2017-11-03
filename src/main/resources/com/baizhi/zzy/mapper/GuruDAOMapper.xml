@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.zzy.dao.GuruDAO">
+    <insert id="save" parameterType="guru">
+        insert into cmfz_guru values(#{id},#{imgPath},#{name},#{status})
+    </insert>
+    <update id="update" parameterType="guru">
+        update cmfz_guru set imgPath=#{imgPath},name=#{name},status=#{status} where id=#{id}
+    </update>
+    <select id="queryAll" resultType="guru">
+        select id,imgPath,name,status from cmfz_guru
+    </select>
+    <select id="queryByPage" resultType="guru">
+        select id,imgPath,name,status from cmfz_guru limit ${pageNow},${pageNum}
+    </select>
+</mapper>
