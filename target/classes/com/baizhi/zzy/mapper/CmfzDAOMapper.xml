@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.zzy.dao.CmfzDAO">
+    <select id="findAllAlbum" resultType="album">
+          select id,imgPath,name,setCount,createTime,score,author,broadcast,brief,status from cmfz_album
+    </select>
+    <select id="findAllRoast" resultType="roast">
+          select id,imgPath,alt,status,createTime from cmfz_roast
+    </select>
+    <resultMap id="articleResultMap" type="article">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="createTime" property="createTime"/>
+        <result column="href" property="href"/>
+        <result column="ext" property="ext"/>
+        <result column="status" property="status"/>
+        <result column="content" property="content"/>
+        <result column="imgPath" property="imgPath"/>
+        <association property="guru" javaType="guru">
+            <id column="gid" property="id"/>
+            <result column="gname" property="name"/>
+            <result column="gimgPath" property="imgPath"/>
+            <result column="gstatus" property="status"/>
+        </association>
+    </resultMap>
+    <select id="findAllArticle" resultMap="articleResultMap">
+    select a.id,a.name,a.createTime,a.href,a.ext,a.status,a.content,a.imgPath,
+    g.id gid,g.imgPath gimgPath,g.name gname,g.status gstatus
+    from cmfz_article a
+    left join cmfz_guru g
+    on a.guruid=g.id
+    </select>
+    <insert id="addUser" parameterType="user">
+        insert into cmfz_user values(#{id},#{name},#{fname},#{phone},#{password},#{sex},#{location},#{city},#{province},#{photo},#{description},#{status},#{createTime},#{guru.id})
+    </insert>
+</mapper>

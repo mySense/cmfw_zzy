@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.zzy.dao.ArticleDAO">
+    <insert id="save" parameterType="article">
+        insert into cmfz_article values(#{id},#{name},#{createTime},#{href},#{ext},#{status},#{content},#{imgPath},#{guru.id})
+    </insert>
+    <update id="update" parameterType="article">
+        update cmfz_article set name=#{name},createTime=#{createTime},href=#{href},ext=#{ext},status=#{status},imgPath=#{imgPath} where id=#{id}
+    </update>
+    <select id="queryAll" resultType="article">
+        c
+    </select>
+    <select id="queryByPage" resultType="article">
+        select id,name,createTime,href,ext,status,content,imgPath from cmfz_article limit #{pageNow},#{pageNum}
+    </select>
+    <delete id="delete" parameterType="String">
+        delete from cmfz_article where id=#{id}
+    </delete>
+</mapper>

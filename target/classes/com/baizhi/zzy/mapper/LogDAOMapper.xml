@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.zzy.dao.LogDAO">
+    <insert id="save" parameterType="log">
+        insert into cmfz_log values(#{id},#{name},#{date},#{doSomeThing},#{status})
+    </insert>
+    <select id="queryAll" resultType="log">
+        select id,name,date,doSomeThing,status from cmfz_log
+    </select>
+    <select id="queryByPage" resultType="log">
+        select id,name,date,doSomeThing,status from cmfz_log limit ${pageNow},${pageNum}
+    </select>
+</mapper>

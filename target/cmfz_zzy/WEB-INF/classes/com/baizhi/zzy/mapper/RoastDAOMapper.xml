@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.zzy.dao.RoastDAO">
+    <select id="queryAll" resultType="roast">
+        select id,imgPath,alt,status,createTime from cmfz_roast
+    </select>
+    <insert id="save" parameterType="roast">
+        insert into cmfz_roast values(#{id},#{imgPath},#{alt},#{status},#{createTime})
+    </insert>
+    <update id="update" parameterType="roast">
+        update cmfz_roast set imgPath=#{imgPath},alt=#{alt},status=#{status},createTime=#{createTime} where id=#{id}
+    </update>
+    <select id="queryByPage" resultType="roast">
+        select id,imgPath,alt,status,createTime from cmfz_roast limit #{pageNow},#{pageNum}
+    </select>
+</mapper>
