@@ -1,15 +1,19 @@
 package com.baizhi.zzy.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baizhi.zzy.dao.CmfzDAO;
 import com.baizhi.zzy.dao.RoastDAO;
 import com.baizhi.zzy.entity.Album;
 import com.baizhi.zzy.entity.Article;
 import com.baizhi.zzy.entity.Body;
 import com.baizhi.zzy.entity.User;
+import com.baizhi.zzy.util.MessageCode;
+import com.baizhi.zzy.util.VerifyCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -21,6 +25,8 @@ import java.util.*;
 public class CmfzServiceImpl implements CmfzService {
     @Autowired
     private CmfzDAO cmfzDAO;
+    private Jedis jedis = new Jedis("192.168.92.128", 6379);
+
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public Map<String,Object> showAfter(String id,String type,String sub_type){
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -66,9 +72,32 @@ public class CmfzServiceImpl implements CmfzService {
         return map;
     }
 
+    public void sendMessage(String phone) throws Exception {
+        String code = VerifyCodeUtil.generateVerifyCode(4);
+        String c = MessageCode.getCode(phone, code);
+        if(c.equals("ok")) {
+            jedis.set(phone, code);
+            jedis.expire(phone, 300);
+        }else{
+            System.out.println("发送失败");
+        }
 
-    public void addUser(User user) {
-        user.setId(UUID.randomUUID().toString().replace("-",""));
-        cmfzDAO.addUser(user);
+
     }
+
+    public Map<String, String> equalMessage(String phone, String code) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        String s = jedis.get(phone);
+        if(s==null){
+            map.put("result","fail");
+        }else
+        if(code.equals(s)){
+            map.put("result","success");
+        }else{
+            map.put("result","fail");
+        }
+        return map;
+    }
+
+
 }

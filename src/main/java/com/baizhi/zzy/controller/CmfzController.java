@@ -30,7 +30,6 @@ import java.util.Map;
 public class CmfzController {
     @Autowired
     private CmfzService cmfzService;
-    private Jedis jedis = new Jedis("192.168.92.128", 6379);
 
 
     @RequestMapping("/first_page")
@@ -41,22 +40,13 @@ public class CmfzController {
     }
     @RequestMapping("/message")
     @ResponseBody
-    public String message(String phone) throws ClientException {
-        String code = VerifyCodeUtil.generateVerifyCode(4);
-        String c = MessageCode.getCode(phone, code);
-        jedis.set(phone,code);
-        jedis.expire(phone,300);
-        return c;
+    public void message(String phone) throws Exception {
+        cmfzService.sendMessage(phone);
     }
     @RequestMapping("/save")
     @ResponseBody
-    public String save(User user,String code){
-        String s = jedis.get(user.getPhone());
-        if(code.equals(s)){
-            cmfzService.addUser(user);
-            return "success";
-        }else{
-            return "fail";
-        }
+    public Map<String,String> save(String phone,String code){
+        Map<String, String> map = cmfzService.equalMessage(phone, code);
+        return map;
     }
 }

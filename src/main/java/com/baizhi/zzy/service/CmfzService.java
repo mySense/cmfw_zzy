@@ -1,6 +1,7 @@
 package com.baizhi.zzy.service;
 
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baizhi.zzy.entity.User;
 
 import java.util.Map;
@@ -10,5 +11,6 @@ import java.util.Map;
  */
 public interface CmfzService {
     Map<String,Object> showAfter(String id,String type,String sub_type);
-    void addUser(User user);
+    void sendMessage(String phone) throws Exception;
+    Map<String,String> equalMessage(String phone,String code);
 }
