@@ -48,10 +48,7 @@ public class MessageCode {
 //请求失败这里会抛ClientException异常
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
         String c=sendSmsResponse.getCode();
-        if(c != null && c.equals("OK")) {
-//请求成功
-            System.out.println("验证码发送成功");
-        }
+
         return c;
 
     }

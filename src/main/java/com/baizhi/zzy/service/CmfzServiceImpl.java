@@ -25,7 +25,6 @@ import java.util.*;
 public class CmfzServiceImpl implements CmfzService {
     @Autowired
     private CmfzDAO cmfzDAO;
-    private Jedis jedis = new Jedis("192.168.92.128", 6379);
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public Map<String,Object> showAfter(String id,String type,String sub_type){
@@ -73,12 +72,14 @@ public class CmfzServiceImpl implements CmfzService {
     }
 
     public void sendMessage(String phone) throws Exception {
+        Jedis jedis = new Jedis("192.168.92.128", 6379);
         String code = VerifyCodeUtil.generateVerifyCode(4);
         String c = MessageCode.getCode(phone, code);
-        if(c.equals("ok")) {
+        if(c != null && c.equals("OK")) {
             jedis.set(phone, code);
             jedis.expire(phone, 300);
-        }else{
+            System.out.println("验证码发送成功");
+        } else{
             System.out.println("发送失败");
         }
 
@@ -86,12 +87,13 @@ public class CmfzServiceImpl implements CmfzService {
     }
 
     public Map<String, String> equalMessage(String phone, String code) {
+        Jedis jedis = new Jedis("192.168.92.128", 6379);
         HashMap<String, String> map = new HashMap<String, String>();
         String s = jedis.get(phone);
         if(s==null){
             map.put("result","fail");
         }else
-        if(code.equals(s)){
+        if(code.equalsIgnoreCase(s)){
             map.put("result","success");
         }else{
             map.put("result","fail");
